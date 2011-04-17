@@ -105,9 +105,8 @@ init_sprites:
   sta player   ; Y coordinate
   lda #$01
   sta player+1 ; tile index
-  lda #$01
-  sta player+2 ; no flip, in front, second palette
   lda #$00
+  sta player+2 ; no flip, in front, first palette
   sta player+3 ; X coordinate
 
   rts
@@ -263,11 +262,11 @@ palette:
   .byte $2D,$15,$2A,$22 ; slightly lighter
   .byte $00,$35,$39,$32 ; even lighter
   .byte $30,$30,$30,$30 ; whites
-  ; Sprite palette, a wide variety of colors
-  .byte $0F,$16,$1A,$12 ; primaries
-  .byte $2D,$15,$2A,$22 ; slightly lighter
-  .byte $00,$35,$39,$32 ; even lighter
-  .byte $30,$30,$30,$30 ; whites
+  ; Sprite palette
+  .byte $0F,$06,$26,$30 ; red, dark
+  .byte $0F,$05,$24,$30 ; red, light
+  .byte $0F,$02,$22,$30 ; blue, dark
+  .byte $0F,$11,$31,$30 ; blue, light
 
 bg:
   ; 32x30 (16 bytes per line, 60 lines)
@@ -367,8 +366,14 @@ bg:
   .byte $00,$00,$00,$00,$00,$00,$00,$00
   .byte $00,$00,$00,$00,$00,$00,$00,$00
 
-  ; A single, simple 8x8 tile
-  .byte $18,$2C,$56,$BB,$DD,$6A,$34,$18
-  .byte $00,$10,$38,$7C,$3E,$1C,$08,$00
+  ; A ghost, with four frames of walking animation. Each frame is 8x8.
+  .byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 0
+  .byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
+  .byte $00,$61,$F0,$F4,$F4,$F0,$70,$00 ; frame 1
+  .byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
+  .byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 2
+  .byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
+  .byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 3
+  .byte $18,$1E,$0F,$2F,$2F,$0F,$0E,$18
   
   .advance $2000 ; The rest of Pattern Table #1 is blank
