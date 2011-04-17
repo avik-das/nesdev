@@ -21,8 +21,13 @@
 
   ; PRG-ROM
 
-  ; Assign the sprite page to page 2
-  .alias sprite $200
+  .alias sprite $200   ; use page 2 for sprite data
+  .alias player sprite ; the first sprite is the player
+
+  .text zp ; zero page
+  .org $0000
+  .space a    1 ; whether the A button was pressed before
+  .space temp 1 ; a temporary variable in an undefined state
 
   ; Actual program code. We only have one PRG-ROM chip here, so the
   ; origin is $C000.
@@ -62,6 +67,7 @@ reset:
   sta $2001
 
   jsr init_graphics
+  jsr init_variables
 
   ; set PPU registers
   lda #%10001000 ; enable NMI on VBlank
@@ -96,13 +102,13 @@ init_sprites:
 
   ; initialize sprite 0
   lda #$70
-  sta sprite   ; Y coordinate
+  sta player   ; Y coordinate
   lda #$01
-  sta sprite+1 ; tile index
+  sta player+1 ; tile index
   lda #$01
-  sta sprite+2 ; no flip, in front, second palette
+  sta player+2 ; no flip, in front, second palette
   lda #$00
-  sta sprite+3 ; X coordinate
+  sta player+3 ; X coordinate
 
   rts
 
@@ -155,7 +161,88 @@ load_name_tables:
 
   rts
 
+init_variables:
+  lda #0
+  sta a
+  rts
+
+react_to_input:
+  ; reset joypads
+  lda #$01
+  ldx #$00
+  sta $4016
+  stx $4016
+
+  lda $4016 ; don't ignore A
+  and #1
+  beq not_a
+
+  lda a
+  and #1
+  bne +  ; don't switch colors if A was pressed before
+  lda #1
+  sta a  ; A is now pressed
+
+  lda player+2   ; sprite attributes
+  and #%11       ; isolate palette portion
+  clc
+  adc #1         ; switch to next palette
+  and #%11       ; cycle back to 0th palette if necessary
+  sta temp       ; store new palette portion
+  lda player+2   ; sprite attributes
+  and #%11111100 ; remove palette portion
+  ora temp       ; store new palette portion
+  sta player+2   ; update sprite
+  jmp +
+
+not_a:
+  lda #0
+  sta a  ; A is no longer pressed
+
+* lda $4016 ; ignore B
+  lda $4016 ; ignore SELECT
+  lda $4016 ; ignore START
+  
+  lda $4016  ; don't ignore UP
+  and #1
+  beq +
+  lda player
+  cmp #8     ; can't go past top of screen
+  beq +
+  dec player ; update Y-coordinate
+  dec player
+
+* lda $4016  ; don't ignore DOWN
+  and #1
+  beq +
+  lda player
+  cmp #$DE   ; can't go past bottom of screen
+  beq +
+  inc player ; update Y-coordinate
+  inc player
+
+* lda $4016    ; don't ignore LEFT
+  and #1
+  beq +
+  lda player+3
+  beq +        ; can't past left of screen
+  dec player+3 ; update X-coordinate
+  dec player+3
+
+* lda $4016    ; don't ignore RIGHT
+  and #$01
+  beq +
+  lda player+3
+  cmp #255-9
+  beq +        ; can't past right of screen
+  inc player+3 ; update X-coordinate
+  inc player+3
+
+* rts
+
 vblank:
+  jsr react_to_input
+
   ldx #$00  ; Reset VRAM
   stx $2006
   stx $2006
@@ -165,7 +252,7 @@ vblank:
   sta $2005 ; Write 0 for  Vert. Scroll value
 
   lda #>sprite
-  sta $4014    ; Jam page $200-$2FF into SPR-RAM
+  sta $4014    ; move page $200-$2FF into SPR-RAM via DMA
   rti
 irq   : rti
 
