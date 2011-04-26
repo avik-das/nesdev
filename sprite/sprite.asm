@@ -188,6 +188,7 @@ init_variables:
   rts
 
 react_to_input:
+.scope
   ; reset joypads
   lda #$01
   ldx #$00
@@ -196,7 +197,7 @@ react_to_input:
 
   lda $4016 ; don't ignore A
   and #1
-  beq not_a
+  beq _not_a
 
   lda a
   and #1
@@ -216,7 +217,7 @@ react_to_input:
   sta player+2   ; update sprite
   jmp +
 
-not_a:
+_not_a:
   lda #0
   sta a  ; A is no longer pressed
 
@@ -260,6 +261,7 @@ not_a:
   inc player+3
 
 * rts
+.scend
 
 snd_low_c:
   pha
