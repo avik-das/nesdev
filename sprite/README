@@ -1,0 +1,73 @@
+== SPRITE - Avik Das ==================================================
+
+A simple test program that demonstrates a wide variety of
+hardware-provided functionality and general programming techniques. The
+following hardware-provided functionality is demonstrated by this
+program:
+
+* A means of creating an entire NES program in the iNES format, suitable
+  for use with any compliant NES emulator. Assembler directives
+  demonstrate the layout of the various parts of the program, as
+  expected by the hardware.
+
+* Color palettes. Multiple palettes are provided, demonstrating how
+  colors are referenced on the NES.
+
+* Pattern and name tables, used to display a background. The background,
+  which fills the entire screen, is composed of a minimal set of tiles,
+  demonstrating how a complex map may be created from a few tiles.
+
+* Display of sprites. The sprites various attributes are also modified
+  throughout the execution of the program, demonstrating the
+  functionality provided by the PPU.
+
+* Playback of sound. The sound is composed of two notes, which
+  demonstrate how sounds are specified in the program, as well as the
+  configuration of the pAPU. Both pulses are utilized, though it is not
+  necessary to do so to achieve the effect in the program.
+
+* Reaction to user input. Demonstrates the use of the pertinent
+  register.
+
+The following programming techniques are demonstrated by this program:
+
+* Movement of a sprite in response to user input, with the rate of
+  movement controlled to provide a smooth experience for the user.
+
+* Collision detection with the edges of the screen.
+
+* Animation of a sprite involving multiple frames, with a deliberately
+  limited frame-rate, and a rest frame to which the animation terminates
+  if the sprite is not moving. This demonstrates how to limit the
+  frame-rate, as well as how to work with an implicit state machine in
+  order to provide animation.
+
+* Switching of color palettes in response to user input. Demonstrates
+  how the sprite attributes are retrieved, modified, and stored back
+  into memory.
+
+* Playback of multiple notes in a specified pattern. Demonstrates the
+  usage of an implicit state machine to limit the rate of playback and
+  to control the notes played back at different times.
+
+~~ FURTHER READING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This program serves as my first step into NES development, and as such,
+the credit goes to the wealth of information available online. The
+following resources in particular were crucial. All of them are
+available via links from NesDev (http://nesdev.parodius.com/#DocsNES).
+
+* NES 101, by Michael Martin. Overall tutorial that walks through the
+  development cycle.
+
+* NES Programming Guide v0.4, by Bokudono and Waseiyakusha. Documents
+  the 6502 instruction set.
+
+* Nintendo Entertainment System documentation v2.0, by Jeremy Chadwick.
+  Documents the entire system, including techniques for achieving the
+  desired output. Only the pAPU is not covered.
+
+* NES APU Sound Hardware Reference, 2004.1.30 by Blargg. Documents the
+  entire sound subsystem.
+
+* NES Technical FAQ v1.4, by Chris Covell. Generally useful information.

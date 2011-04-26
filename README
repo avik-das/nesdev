@@ -1,0 +1,27 @@
+== NES DEVELOPMENT - Avik Das ==========================================
+
+A collection of programs written for the Nintendo Entertainment System
+(NES). Due to the limitations of the hardware, all the programs must be
+relatively small, so it makes sense to keep them all in the same
+repository.
+
+The included programs are described briefly below, while more elaborate
+descriptions are provided inside the corresponding directories.
+
+~~ PREREQUISITES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The programs are written in 6502 assembly, using the Ophis Assembler,
+which may be found at https://hkn.eecs.berkeley.edu/~mcmartin/ophis/ .
+The Makefiles assume that the assembler is on the PATH.
+
+To run the programs after assembly, an NES emulator is required. The
+programs are tested on FCEUX, which is available at
+http://fceux.com/web/home.html .
+
+~~ INCLUDED PROGRAMS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+More detailed descriptions are available in the README files inside the
+directory containing each program.
+
+sprite - A simple test program that demonstrates a wide variety of
+  hardware-provided functionality and general programming techniques.
