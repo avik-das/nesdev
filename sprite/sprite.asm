@@ -27,6 +27,7 @@
   .text zp ; zero page
   .org $0000
   .space a    1 ; whether the A button was pressed before
+  .space snd  1 ; whether a low or a high note should be played
   .space temp 1 ; a temporary variable in an undefined state
 
   ; Actual program code. We only have one PRG-ROM chip here, so the
@@ -67,6 +68,7 @@ reset:
   sta $2001
 
   jsr init_graphics
+  jsr init_sound
   jsr init_variables
 
   ; set PPU registers
@@ -160,9 +162,29 @@ load_name_tables:
 
   rts
 
+init_sound:
+  lda #%00000011 ; length ctr not enabled
+                 ; no delta modulation
+                 ; no noise
+                 ; no triangle
+                 ; yes pulse #2
+                 ; yes pulse #1
+  sta $4015
+  lda #0         ; sweep not enabled
+                 ; period = 0
+                 ; not negative
+                 ; no shift
+  sta $4001
+  sta $4005
+  lda #%01000000 ; 4-frame cycle
+                 ; disable frame interrupt
+  sta $4017
+  rts
+
 init_variables:
   lda #0
   sta a
+  sta snd
   rts
 
 react_to_input:
@@ -239,6 +261,64 @@ not_a:
 
 * rts
 
+snd_low_c:
+  pha
+  lda #%10000100 ; duty = 2
+                 ; loop env/disable length = 0
+                 ; env not disabled
+                 ; vol/env period = 4
+  sta $4000
+                 ; middle C has a frequency of about 523 Hz, so the square
+                 ; wave needed has a frequency of 261.5 Hz, which
+                 ; corresponds to $1AA
+  lda #%10101010 ; upper two nibbles of $1AA
+  sta $4002
+  lda #%00001001 ; length index = 0b00001, corresponds to 127 frames
+                 ; upper three bits of $1AA
+  sta $4003
+  pla
+  rts
+
+snd_high_c:
+  pha
+  lda #%10000110 ; duty = 2
+                 ; loop env/disable length = 0
+                 ; env not disabled
+                 ; vol/env period = 6
+  sta $4004
+                 ; high C has a frequency of about 2092 Hz, so the square
+                 ; wave needed has a frequency of 1046 Hz, which
+                 ; corresponds to $06A
+  lda #%01101010 ; upper two nibbles of $06A
+  sta $4006
+  lda #%00001000 ; length index = 0b00001, corresponds to 127 frames
+                 ; upper three bits of $06A
+  sta $4007
+  pla
+  rts
+
+play_snd:
+.scope
+  lda #%00000
+  cmp snd
+  beq _play_low_c
+  lda #%10000
+  cmp snd
+  beq _play_high_c
+  jmp _done_playing
+_play_low_c:
+  jsr snd_low_c
+  jmp _done_playing
+_play_high_c:
+  jsr snd_high_c
+_done_playing:
+  inc snd
+  lda #%11111
+  and snd
+  sta snd
+  rts
+.scend
+
 vblank:
   jsr react_to_input
 
@@ -252,6 +332,9 @@ vblank:
 
   lda #>sprite
   sta $4014    ; move page $200-$2FF into SPR-RAM via DMA
+  
+  jsr play_snd
+
   rti
 irq   : rti
 
