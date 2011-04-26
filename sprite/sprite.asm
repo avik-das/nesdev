@@ -28,6 +28,7 @@
   .org $0000
   .space a    1 ; whether the A button was pressed before
   .space snd  1 ; whether a low or a high note should be played
+  .space ani  1 ; the current frame of the animation
   .space temp 1 ; a temporary variable in an undefined state
 
   ; Actual program code. We only have one PRG-ROM chip here, so the
@@ -185,6 +186,7 @@ init_variables:
   lda #0
   sta a
   sta snd
+  sta ani
   rts
 
 react_to_input:
@@ -221,7 +223,10 @@ _not_a:
   lda #0
   sta a  ; A is no longer pressed
 
-* lda $4016 ; ignore B
+* lda #0
+  sta temp  ; hasn't moved
+
+  lda $4016 ; ignore B
   lda $4016 ; ignore SELECT
   lda $4016 ; ignore START
   
@@ -234,6 +239,9 @@ _not_a:
   dec player ; update Y-coordinate
   dec player
 
+  lda #1     ; has moved
+  sta temp
+
 * lda $4016  ; don't ignore DOWN
   and #1
   beq +
@@ -243,6 +251,9 @@ _not_a:
   inc player ; update Y-coordinate
   inc player
 
+  lda #1     ; has moved
+  sta temp
+
 * lda $4016    ; don't ignore LEFT
   and #1
   beq +
@@ -250,6 +261,9 @@ _not_a:
   beq +        ; can't past left of screen
   dec player+3 ; update X-coordinate
   dec player+3
+
+  lda #1     ; has moved
+  sta temp
 
 * lda $4016    ; don't ignore RIGHT
   and #$01
@@ -260,7 +274,35 @@ _not_a:
   inc player+3 ; update X-coordinate
   inc player+3
 
-* rts
+  lda #1     ; has moved
+  sta temp
+
+* jsr _update_frame
+  rts
+
+_update_frame:
+  lda ani
+  beq _rest_frame
+  and #%1111
+  bne _inc_ani
+  lda ani
+  and #%110000
+  bne _change_frame
+_rest_frame:
+  lda temp
+  beq _done
+_change_frame:
+  lda player+1   ; tile index
+  and #%11
+  sta player+1
+  inc player+1
+_inc_ani:
+  inc ani
+  lda ani
+  and #%111111
+  sta ani
+_done:
+  rts
 .scend
 
 snd_low_c:
@@ -454,11 +496,11 @@ bg:
   ; A ghost, with four frames of walking animation. Each frame is 8x8.
   .byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 0
   .byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
-  .byte $00,$61,$F0,$F4,$F4,$F0,$70,$00 ; frame 1
-  .byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
+  .byte $00,$61,$F0,$D0,$F4,$F0,$70,$00 ; frame 1
+  .byte $18,$1E,$0F,$0B,$2F,$0F,$0F,$19
   .byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 2
   .byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
-  .byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 3
-  .byte $18,$1E,$0F,$2F,$2F,$0F,$0E,$18
+  .byte $00,$61,$F0,$F4,$D0,$F0,$F0,$80 ; frame 3
+  .byte $18,$1E,$0F,$2F,$0B,$0F,$0E,$18
   
   .advance $2000 ; The rest of Pattern Table #1 is blank
