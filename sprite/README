@@ -1,8 +1,23 @@
 == SPRITE - Avik Das ==================================================
 
 A simple test program that demonstrates a wide variety of
-hardware-provided functionality and general programming techniques. The
-following hardware-provided functionality is demonstrated by this
+hardware-provided functionality and general programming techniques.
+
+~~ RUNNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To assemble and run sprite using an emulator like FCEUX:
+
+  make
+  fceux sprite.nes
+
+The following buttons are utilized:
+
+  D-PAD: move the sprite
+  A    : switch the sprite palette
+
+~~ FUNCTIONALITY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following hardware-provided functionality is demonstrated by this
 program:
 
 * A means of creating an entire NES program in the iNES format, suitable
