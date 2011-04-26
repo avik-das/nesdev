@@ -1,5 +1,13 @@
-TARGET := sprite
-OPHIS  := ophis # must be on the PATH
+# must be on the PATH
+OPHIS := ophis
 
-$(TARGET).nes: $(TARGET).asm
-	$(OPHIS) $(TARGET).asm $(TARGET).nes
+TARGET := sprite
+SRC := *.asm
+OUT := $(TARGET).nes
+
+$(OUT): $(SRC)
+	$(OPHIS) $(SRC) $(OUT)
+
+.PHONY: clean
+clean:
+	rm $(OUT)
