@@ -1,13 +1,12 @@
 # must be on the PATH
 OPHIS := ophis
 
-TARGET := sprite
-SRC := *.asm
-OUT := $(TARGET).nes
+TARGET := $(shell basename $(CURDIR)).nes
+SOURCE := $(wildcard *.asm)
 
-$(OUT): $(SRC)
-	$(OPHIS) $(SRC) $(OUT)
+$(TARGET): $(SOURCE)
+	$(OPHIS) $(SOURCE) $(TARGET)
 
 .PHONY: clean
 clean:
-	rm $(OUT)
+	rm $(TARGET)
