@@ -12,8 +12,10 @@ To assemble and run sprite using an emulator like FCEUX:
 
 The following buttons are utilized:
 
-  D-PAD: move the sprite
-  A    : switch the sprite palette
+   D-PAD : move the sprite
+       A : switch the sprite palette
+       B : flip sprite vertically
+  SELECT : switch background priority
 
 ~~ FUNCTIONALITY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -26,7 +28,11 @@ program:
   expected by the hardware.
 
 * Color palettes. Multiple palettes are provided, demonstrating how
-  colors are referenced on the NES.
+  colors are referenced on the NES. The palettes may be switched based
+  on user input.
+
+* Sprite attributes. Both the vertical flip and the background priority
+  may be toggled based on user input.
 
 * Pattern and name tables, used to display a background. The background,
   which fills the entire screen, is composed of a minimal set of tiles,
@@ -57,7 +63,7 @@ The following programming techniques are demonstrated by this program:
   frame-rate, as well as how to work with an implicit state machine in
   order to provide animation.
 
-* Switching of color palettes in response to user input. Demonstrates
+* Switching of sprite attributes in response to user input. Demonstrates
   how the sprite attributes are retrieved, modified, and stored back
   into memory.
 

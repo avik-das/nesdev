@@ -26,7 +26,11 @@
 
   .text zp ; zero page
   .org $0000
+
   .space a    1 ; whether the A button was pressed before
+  .space b    1 ; whether the B button was pressed before
+  .space sel  1 ; whether the B button was pressed before
+
   .space snd  1 ; whether a low or a high note should be played
   .space ani  1 ; the current frame of the animation
   .space temp 1 ; a temporary variable in an undefined state
@@ -185,6 +189,8 @@ init_sound:
 init_variables:
   lda #0
   sta a
+  sta b
+  sta sel
   sta snd
   sta ani
   rts
@@ -223,11 +229,54 @@ _not_a:
   lda #0
   sta a  ; A is no longer pressed
 
+* lda $4016 ; don't ignore B
+  and #1
+  beq _not_b
+
+  lda b
+  and #1
+  bne +  ; don't flip if B was pressed before
+  lda #1
+  sta b  ; B is now pressed
+
+  lda player+2   ; sprite attributes
+  clc
+  adc #%10000000 ; effectively flip MSB, vertical flip
+  sta player+2
+  jmp +
+
+_not_b:
+  lda #0
+  sta b  ; B is no longer pressed
+
+* lda $4016 ; don't ignore SELECT
+  and #1
+  beq _not_sel
+
+  lda sel
+  and #1
+  bne +   ; don't flip if SELECT was pressed before
+  lda #1
+  sta sel ; SELECT is now pressed
+
+  lda player+2   ; sprite attributes
+  clc
+  adc #%00100000 ; effectively flip bit 2, background priority
+  and #%00100000 ; isolate new background priority
+  sta temp
+  lda player+2
+  and #%11011111 ; clear old background priority
+  ora temp       ; update new background priority
+  sta player+2
+  jmp +
+
+_not_sel:
+  lda #0
+  sta sel ; SELECT is no longer pressed
+
 * lda #0
   sta temp  ; hasn't moved
 
-  lda $4016 ; ignore B
-  lda $4016 ; ignore SELECT
   lda $4016 ; ignore START
   
   lda $4016  ; don't ignore UP
