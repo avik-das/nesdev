@@ -110,11 +110,37 @@ init_sprites:
   ; initialize sprite 0
   lda #$70
   sta player   ; Y coordinate
-  lda #$01
-  sta player+1 ; tile index
   lda #$00
+  sta player+1 ; tile index
   sta player+2 ; no flip, in front, first palette
   sta player+3 ; X coordinate
+  ; initialize sprite 1
+  lda #$70
+  sta player+4 ; Y coordinate
+  lda #$01
+  sta player+5 ; tile index
+  lda #$00
+  sta player+6 ; no flip, in front, first palette
+  lda #$08
+  sta player+7 ; X coordinate
+  ; initialize sprite 2
+  lda #$78
+  sta player+8  ; Y coordinate
+  lda #$02
+  sta player+9  ; tile index
+  lda #$01
+  sta player+10 ; no flip, in front, second palette
+  lda #$00
+  sta player+11 ; X coordinate
+  ; initialize sprite 3
+  lda #$78
+  sta player+12 ; Y coordinate
+  lda #$03
+  sta player+13 ; tile index
+  lda #$01
+  sta player+14 ; no flip, in front, second palette
+  lda #$08
+  sta player+15 ; X coordinate
 
   rts
 
@@ -216,13 +242,28 @@ react_to_input:
   lda player+2   ; sprite attributes
   and #%11       ; isolate palette portion
   clc
-  adc #1         ; switch to next palette
+  adc #2         ; switch to next palette (2 palettes were used)
   and #%11       ; cycle back to 0th palette if necessary
   sta temp       ; store new palette portion
+  ; All four sprites need to be changed
+  ; TODO: refactor
   lda player+2   ; sprite attributes
   and #%11111100 ; remove palette portion
   ora temp       ; store new palette portion
   sta player+2   ; update sprite
+  lda player+6   ; sprite attributes
+  and #%11111100 ; remove palette portion
+  ora temp       ; store new palette portion
+  sta player+6   ; update sprite
+  inc temp
+  lda player+10  ; sprite attributes
+  and #%11111100 ; remove palette portion
+  ora temp       ; store new palette portion
+  sta player+10  ; update sprite
+  lda player+14  ; sprite attributes
+  and #%11111100 ; remove palette portion
+  ora temp       ; store new palette portion
+  sta player+14  ; update sprite
   jmp +
 
 _not_a:
@@ -287,6 +328,12 @@ _not_sel:
   beq +
   dec player ; update Y-coordinate
   dec player
+  dec player+4
+  dec player+4
+  dec player+8
+  dec player+8
+  dec player+12
+  dec player+12
 
   lda #1     ; has moved
   sta temp
@@ -295,10 +342,16 @@ _not_sel:
   and #1
   beq +
   lda player
-  cmp #$DE   ; can't go past bottom of screen
+  cmp #222-8 ; can't go past bottom of screen
   beq +
   inc player ; update Y-coordinate
   inc player
+  inc player+4
+  inc player+4
+  inc player+8
+  inc player+8
+  inc player+12
+  inc player+12
 
   lda #1     ; has moved
   sta temp
@@ -310,6 +363,12 @@ _not_sel:
   beq +        ; can't past left of screen
   dec player+3 ; update X-coordinate
   dec player+3
+  dec player+7
+  dec player+7
+  dec player+11
+  dec player+11
+  dec player+15
+  dec player+15
 
   lda #1     ; has moved
   sta temp
@@ -318,10 +377,16 @@ _not_sel:
   and #$01
   beq +
   lda player+3
-  cmp #255-9
+  cmp #255-7-8
   beq +        ; can't past right of screen
   inc player+3 ; update X-coordinate
   inc player+3
+  inc player+7
+  inc player+7
+  inc player+11
+  inc player+11
+  inc player+15
+  inc player+15
 
   lda #1     ; has moved
   sta temp
@@ -342,9 +407,16 @@ _rest_frame:
   beq _done
 _change_frame:
   lda player+1   ; tile index
-  and #%11
+  clc
+  adc #$4
+  and #$F
   sta player+1
-  inc player+1
+  adc #1
+  sta player+5
+  adc #1
+  sta player+9
+  adc #1
+  sta player+13
 _inc_ani:
   inc ani
   lda ani
@@ -438,11 +510,11 @@ palette:
   .byte $2D,$15,$2A,$22 ; slightly lighter
   .byte $00,$35,$39,$32 ; even lighter
   .byte $30,$30,$30,$30 ; whites
-  ; Sprite palette
-  .byte $0C,$06,$26,$30 ; red, dark, background is dark blue
-  .byte $0F,$05,$24,$30 ; red, light
-  .byte $0F,$02,$22,$30 ; blue, dark
-  .byte $0F,$11,$31,$30 ; blue, light
+  ; Sprite palette, background is dark blue
+  .byte $0C,$31,$1C,$0F ; top of ghost, normal
+  .byte $0C,$31,$1C,$16 ; bottom of ghost, normal
+  .byte $0F,$26,$08,$30 ; top of ghost, inverted
+  .byte $0F,$26,$08,$2C ; bottom of ghost, inverted
 
 bg:
   ; 32x30 (16 bytes per line, 60 lines)
@@ -548,18 +620,51 @@ bg:
 
   ; Pattern Table #1: Sprites
 
-  ; A single, transparent 8x8 tile
-  .byte $00,$00,$00,$00,$00,$00,$00,$00
-  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  ; A ghost, with four frames of walking animation. Each frame is
+  ; 16x16, so there are four sprites per frame.
+  ;.byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 0
+  ;.byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
+  ;.byte $00,$61,$F0,$D0,$F4,$F0,$70,$00 ; frame 1
+  ;.byte $18,$1E,$0F,$0B,$2F,$0F,$0F,$19
+  ;.byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 2
+  ;.byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
+  ;.byte $00,$61,$F0,$F4,$D0,$F0,$F0,$80 ; frame 3
+  ;.byte $18,$1E,$0F,$2F,$0B,$0F,$0E,$18
 
-  ; A ghost, with four frames of walking animation. Each frame is 8x8.
-  .byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 0
-  .byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
-  .byte $00,$61,$F0,$D0,$F4,$F0,$70,$00 ; frame 1
-  .byte $18,$1E,$0F,$0B,$2F,$0F,$0F,$19
-  .byte $00,$61,$F0,$F4,$F4,$F0,$F0,$80 ; frame 2
-  .byte $18,$1E,$0F,$2F,$2F,$0F,$0F,$19
-  .byte $00,$61,$F0,$F4,$D0,$F0,$F0,$80 ; frame 3
-  .byte $18,$1E,$0F,$2F,$0B,$0F,$0E,$18
+  .byte $00,$03,$0F,$0F,$1F,$1F,$1F,$1F ; frame 0
+  .byte $03,$0C,$10,$10,$24,$26,$26,$60
+  .byte $00,$C0,$F0,$F0,$F8,$F8,$F8,$F8
+  .byte $C0,$30,$08,$08,$44,$64,$64,$06
+  .byte $5F,$5F,$5F,$1F,$1F,$1F,$19,$00
+  .byte $A5,$AA,$A0,$60,$20,$20,$26,$19
+  .byte $FA,$FA,$FA,$F8,$F8,$F8,$98,$00
+  .byte $55,$A5,$05,$06,$04,$04,$64,$98
+  
+  .byte $00,$03,$0F,$0F,$1F,$1F,$5F,$5F ; frame 1
+  .byte $03,$0C,$10,$10,$24,$66,$A6,$A0
+  .byte $00,$C0,$F0,$F0,$F8,$F8,$F8,$F8
+  .byte $C0,$30,$08,$08,$44,$64,$64,$04
+  .byte $5F,$1F,$1F,$1F,$1B,$01,$00,$00
+  .byte $A5,$6A,$20,$20,$24,$1A,$01,$00
+  .byte $F8,$F8,$FA,$FA,$FA,$B8,$18,$00
+  .byte $54,$A6,$05,$05,$05,$46,$A4,$18
+
+  .byte $00,$03,$0F,$0F,$1F,$1F,$1F,$1F ; frame 2
+  .byte $03,$0C,$10,$10,$24,$26,$26,$60
+  .byte $00,$C0,$F0,$F0,$F8,$F8,$F8,$F8
+  .byte $C0,$30,$08,$08,$44,$64,$64,$06
+  .byte $5F,$5F,$5F,$1F,$1F,$1F,$19,$00
+  .byte $A5,$AA,$A0,$60,$20,$20,$26,$19
+  .byte $FA,$FA,$FA,$F8,$F8,$F8,$98,$00
+  .byte $55,$A5,$05,$06,$04,$04,$64,$98
+
+  .byte $00,$03,$0F,$0F,$1F,$1F,$1F,$1F ; frame 3
+  .byte $03,$0C,$10,$10,$24,$26,$26,$20
+  .byte $00,$C0,$F0,$F0,$F8,$F8,$FA,$FA
+  .byte $C0,$30,$08,$08,$44,$66,$65,$05
+  .byte $1F,$1F,$5F,$5F,$5F,$1D,$18,$00
+  .byte $25,$6A,$A0,$A0,$A0,$62,$25,$18
+  .byte $FC,$F8,$F8,$F8,$D8,$80,$00,$00
+  .byte $55,$A6,$04,$04,$24,$58,$80,$00
   
   .advance $2000 ; The rest of Pattern Table #1 is blank
