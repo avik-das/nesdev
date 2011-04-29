@@ -57,6 +57,15 @@ The following programming techniques are demonstrated by this program:
 
 * Collision detection with the edges of the screen.
 
+* Multi-sprite agent, where a character on screen is composed of
+  smaller, 8x8 tiles, and seamlessly works together. Whenever any
+  attribute of the character is changed, all its constituent sprites
+  must be modified. In the case of flips, the tile indices themselves
+  must be changed.
+
+  TODO: right now, the vertical flip and background priority is not
+  working.
+
 * Animation of a sprite involving multiple frames, with a deliberately
   limited frame-rate, and a rest frame to which the animation terminates
   if the sprite is not moving. This demonstrates how to limit the
