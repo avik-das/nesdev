@@ -282,8 +282,36 @@ _not_a:
 
   lda player+2   ; sprite attributes
   clc
-  adc #%10000000 ; effectively flip MSB, vertical flip
+  adc #%10000001 ; effectively flip MSB, vertical flip
+  and #%10000001
   sta player+2
+  lda player+6
+  clc
+  adc #%10000001
+  and #%10000001
+  sta player+6
+  lda player+10
+  clc
+  adc #%10000001
+  and #%10000001
+  sta player+10
+  lda player+14
+  clc
+  adc #%10000001
+  and #%10000001
+  sta player+14
+  lda player+1   ; tile index
+  clc
+  adc #2
+  and #%00000011
+  sta player+1
+  adc #1
+  sta player+5
+  adc #1
+  and #%00000011
+  sta player+9
+  adc #1
+  sta player+13
   jmp +
 
 _not_b:
@@ -309,6 +337,18 @@ _not_b:
   and #%11011111 ; clear old background priority
   ora temp       ; update new background priority
   sta player+2
+  lda player+6
+  and #%11011111
+  ora temp
+  sta player+6
+  lda player+10
+  and #%11011111
+  ora temp
+  sta player+10
+  lda player+14
+  and #%11011111
+  ora temp
+  sta player+14
   jmp +
 
 _not_sel:
