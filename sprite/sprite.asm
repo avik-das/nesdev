@@ -255,7 +255,19 @@ react_to_input:
   and #%11111100 ; remove palette portion
   ora temp       ; store new palette portion
   sta player+6   ; update sprite
-  inc temp
+
+  lda temp
+  sec
+  sbc #1
+  and #%1
+  pha
+  lda temp
+  and #%10
+  sta temp
+  pla
+  ora temp
+  sta temp
+
   lda player+10  ; sprite attributes
   and #%11111100 ; remove palette portion
   ora temp       ; store new palette portion
@@ -283,22 +295,22 @@ _not_a:
   lda player+2   ; sprite attributes
   clc
   adc #%10000001 ; effectively flip MSB, vertical flip
-  and #%10000001
+  and #%11111101
   sta player+2
   lda player+6
   clc
   adc #%10000001
-  and #%10000001
+  and #%11111101
   sta player+6
   lda player+10
   clc
   adc #%10000001
-  and #%10000001
+  and #%11111101
   sta player+10
   lda player+14
   clc
   adc #%10000001
-  and #%10000001
+  and #%11111101
   sta player+14
   lda player+1   ; tile index
   clc
@@ -452,10 +464,13 @@ _change_frame:
   and #$F
   sta player+1
   adc #1
+  and #$F
   sta player+5
   adc #1
+  and #$F
   sta player+9
   adc #1
+  and #$F
   sta player+13
 _inc_ani:
   inc ani
