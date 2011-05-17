@@ -25,3 +25,8 @@ directory containing each program.
 
 sprite - A simple test program that demonstrates a wide variety of
   hardware-provided functionality and general programming techniques.
+
+money-run - A side-scrolling platformer with an emphasis on simplicity.
+  A collaboration with Israel Jacques, with the goal of creating an
+  actual game, instead of just a tech demo, albeit one simple enough to
+  complete in one week.
