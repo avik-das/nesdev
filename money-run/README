@@ -1,0 +1,21 @@
+== MONEY-RUN - Avik Das, Israel Jacques ===============================
+
+A side-scrolling platformer with an emphasis on simplicity. The goal of
+this game is as follows:
+
+* Build an actual game instead of simply a tech demo.
+* Be simple enough to finish within a week.
+* Promote collaboration between two friends who have only worked on
+  school projects together.
+* Have fun developing an NES game.
+
+~~ RUNNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To assemble and run money-run using an emulator like FCEUX:
+
+  make
+  fceux money-run.nes
+
+~~ FUNCTIONALITY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is a work-in-progress, so there is no functionality yet.
