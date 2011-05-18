@@ -31,8 +31,8 @@
   ; .space name size ; documentation
 
   ; Actual program code. We only have one PRG-ROM chip here, so the
-  ; origin is $C000.
-  ; Mapper #0, mirrors the 16KiB code from $8000-$bffff and $c000-$fffff.
+  ; origin is $8000. Mapper #0, mirrors the 16KiB code from $8000-$BFFF
+  ; and $C000-$FFFF because only one PRG-ROM page.
   .text
   .org $8000
 
