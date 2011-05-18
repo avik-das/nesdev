@@ -73,8 +73,8 @@ reset:
   jsr init_variables
 
   ; set PPU registers
-  lda #%10001000 ; enable NMI on VBlank
-                 ; 8x8 sprites
+  lda #%10110000 ; enable NMI on VBlank
+                 ; 8x16 sprites
                  ; background pattern table at $0000
                  ;     sprite pattern table at $1000
                  ; name table at $2000
@@ -103,14 +103,24 @@ init_sprites:
   inx
   bne -
 
-  ; initialize sprite 0
-  lda #$70
+  ; initialize sprite 0 (left half of player)
+  lda #$80
   sta player   ; Y coordinate
   lda #$00
   sta player+2 ; no flip, in front, first palette
   sta player+3 ; X coordinate
-  lda #$01
+  lda #$02
   sta player+1 ; tile index
+
+  ; initialize sprite 1 (right half of player)
+  lda #$80
+  sta player+4 ; Y coordinate
+  lda #$00
+  sta player+6 ; no flip, in front, first palette
+  lda #$08
+  sta player+7 ; X coordinate
+  lda #$04
+  sta player+5 ; tile index
 
   ; Due to the clearing of page 2, all the other sprites will be
   ; positioned at (0,0), with all flags set to 0. In particular, the
@@ -268,14 +278,14 @@ irq   : rti ; vblank falls through to here
 palette:
   ; Background palette, a wide variety of colors
   .byte $0F,$18,$28,$38 ; light crate, yellow
-  .byte $2D,$15,$2A,$22 ; slightly lighter
+  .byte $0F,$08,$18,$28 ; darker crate, yellow
   .byte $0F,$0B,$19,$3A ; dollar sign, green
   .byte $30,$30,$30,$30 ; whites
   ; Sprite palette, background is dark blue
-  .byte $0F,$31,$1C,$0F ; top of ghost, normal
-  .byte $0F,$31,$1C,$16 ; bottom of ghost, normal
-  .byte $0F,$26,$08,$30 ; top of ghost, inverted
-  .byte $0F,$26,$08,$2C ; bottom of ghost, inverted
+  .byte $0F,$02,$11,$21 ; player, blue
+  .byte $0F,$31,$1C,$16
+  .byte $0F,$26,$08,$30
+  .byte $0F,$26,$08,$2C
 
 bg:
   ; 32x30 (16 bytes = 16 tiles per line)
@@ -315,7 +325,7 @@ bg:
 
   ; attribute table
   .byte $00,$00,$AA,$00,$00,$00,$00,$00,$00,$00,$AA,$00,$00,$00,$00,$00
-  .byte $00,$00,$AA,$00,$00,$00,$00,$00,$00,$00,$AA,$00,$00,$00,$00,$00
+  .byte $55,$55,$AA,$00,$00,$00,$00,$00,$55,$55,$AA,$00,$00,$00,$00,$00
   .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
   .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
@@ -330,7 +340,27 @@ bg:
   ; $0000.
   .org $0000
 
-  ; Pattern Table #0: Background
+  ; Pattern Table #0: Sprites
+
+  ; Two transparent 8x8 tiles
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+
+  ; 16x16 walking person built from 4 8x8 tiles
+  .byte $03,$07,$06,$04,$0F,$17,$30,$28
+  .byte $00,$03,$03,$03,$00,$0F,$1F,$17
+  .byte $2C,$3C,$0C,$0C,$0D,$1A,$1C,$1C ; left-bottom
+  .byte $17,$07,$07,$07,$06,$0C,$08,$00
+  .byte $80,$C0,$C0,$40,$C0,$E0,$7C,$3C ; right-top
+  .byte $00,$80,$80,$80,$00,$C0,$E0,$F8
+  .byte $7C,$E0,$60,$60,$30,$B0,$50,$70 ; right-bottom
+  .byte $80,$C0,$C0,$C0,$E0,$60,$20,$00
+  
+  .advance $1000 ; The rest of Pattern Table #0 is blank
+
+  ; Pattern Table #1: Background
 
   ; A single, transparent 8x8 tile
   .byte $00,$00,$00,$00,$00,$00,$00,$00
@@ -356,15 +386,5 @@ bg:
   .byte $40,$A0,$70,$F0,$E0,$C0,$80,$80
   .byte $A0,$50,$00,$00,$00,$00,$00,$00
 
-  .advance $1000 ; The rest of Pattern Table #0 is blank
-
-  ; Pattern Table #1: Sprites
-
-  ; A single, transparent 8x8 tile
-  .byte $00,$00,$00,$00,$00,$00,$00,$00
-  .byte $00,$00,$00,$00,$00,$00,$00,$00
-
-  .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-  .byte $00,$00,$00,$00,$00,$00,$00,$00
-  
   .advance $2000 ; The rest of Pattern Table #1 is blank
+
