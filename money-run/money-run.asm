@@ -32,8 +32,9 @@
 
   ; Actual program code. We only have one PRG-ROM chip here, so the
   ; origin is $C000.
+  ; Mapper #0, mirrors the 16KiB code from $8000-$bffff and $c000-$fffff.
   .text
-  .org $C000
+  .org $8000
 
 reset:
   sei ; disable interrupts
