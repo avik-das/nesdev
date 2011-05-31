@@ -1,0 +1,75 @@
+A series of notes documenting the thought process behind the
+implementation of the game.
+
+========================================================================
+DRAWING THE LEVEL
+========================================================================
+
+Assume that the height map has been populated with random data. The
+basic idea behind this algorithm is to draw exactly two columns, each
+containing one crate, that is, 16 pixels of data. Even though this
+requires updating the PPU VRAM address inside a loop to jump from line
+to line, this is needed to update incrementally as needed for scrolling.
+
+~~ REGISTERS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A - general arithmetic
+X - the index of the left of the two columns being processed, in
+    increments of 16 pixels
+Y - the current height being processed, in increments of 16 pixels
+
+~~ VARIABLES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+leftcol  - the decoded height of the left column, out of the two being
+           processed currently
+rghtcol  - the decoded height of the right column, out of the two being
+           processed currently
+vramaddr - lower byte of PPU VRAM address that is being written too
+
+~~ ALGORITHM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ROUTINE decode_height(X):
+  A := [heights + X]
+  rghtcol := A
+  A := [heights + X]
+  A := A << 1
+  A := A << 1
+  A := A << 1
+  A := A << 1
+  leftcol := A
+  RETURN
+
+ROUTINE draw_next_cols(X):
+  leftcol, rghtcol = decode_height(X)
+
+  Y := 16
+  vramaddr := $00
+  WHILE Y > 0:
+    A := $20
+    STORE INTO PPU
+    A := vramaddr
+    STORE INTO PPU
+
+    ; TODO: DRAW BOTTOM OF CRATE
+
+    IF leftcol >= Y: ; draw top of crate
+      A := $01
+      STORE INTO PPU
+      A := $02
+      STORE INTO PPU
+    ELSE: ; draw blank tiles
+      A := $00
+      STORE INTO PPU
+      STORE INTO PPU
+    IF rghtcol >= Y: ; draw top of crate
+      A := $01
+      STORE INTO PPU
+      A := $02
+      STORE INTO PPU
+    ELSE: ; draw blank tiles
+      A := $00
+      STORE INTO PPU
+      STORE INTO PPU
+
+    Y := Y - 2
+    vramaddr := vramaddr + ($20*2)
