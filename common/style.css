@@ -1,0 +1,89 @@
+body {
+  margin-top: 1.0em;
+  font-family: monospace;
+  background: black;
+  color: white;
+} 
+
+#cartridge {
+  width: 971px;
+  margin: auto;
+}
+
+#top {
+  background: url(layout-cartridge-top.png);
+  height: 171px;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#container {
+  background: url(layout-cartridge-middle.png);
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+#top, #container {
+  width: 432px;
+  padding-left: 404px;
+  padding-right: 135px;
+}
+
+#container p:first-child {
+  margin-top: 0;
+}
+
+#container h1,
+#container h2,
+#container h3,
+#container h4,
+#container h5,
+#container h6 {
+  font-size: 1em;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+#container h1:before { content: "~ "; }
+#container h2:before { content: "~~ "; }
+#container h3:before { content: "~~~ "; }
+#container h4:before { content: "~~~~ "; }
+#container h5:before { content: "~~~~~ "; }
+#container h6:before { content: "~~~~~~ "; }
+#container h1:after  { content: " ~"; }
+#container h2:after  { content: " ~~"; }
+#container h3:after  { content: " ~~~"; }
+#container h4:after  { content: " ~~~~"; }
+#container h5:after  { content: " ~~~~~"; }
+#container h6:after  { content: " ~~~~~~"; }
+
+#container a {
+  color: #ffa500;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#container .screenshot {
+  display: block;
+  margin: auto;
+}
+
+#container ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+#container ul li:before { content: "* "; }
+
+#bottom {
+  background: url(layout-cartridge-bottom.png);
+  width: 971px;
+  height: 322px;
+}
+
+pre {
+  background: #000;
+  color: #fff;
+  padding: 15px;
+  overflow: auto;
+}

@@ -5,7 +5,8 @@
 
   <title>avik-das/nesdev @ GitHub</title>
 
-  <style type="text/css">
+  <link rel="stylesheet" href="common/style.css" type="text/css" />
+  <!--<style type="text/css">
     body {
       margin-top: 1.0em;
       background-color: #0c5108;
@@ -27,51 +28,69 @@
     pre { background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
+  </style>-->
+  <style type="text/css">
+    body { color: #ddd; }
+    .download { float: right; }
+    pre {
+      background: #ddd;
+      color: black;
+    }
   </style>
 </head>
 
 <body>
   <a href="http://github.com/avik-das/nesdev"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
 
-  <div id="container">
+  <div id="cartridge">
+      <div id="top"><img src="header.png" width="425" height="150"></div>
+      <div id="container">
+        <div class="download">
+          <a href="http://github.com/avik-das/nesdev/zipball/master">
+            <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+          <a href="http://github.com/avik-das/nesdev/tarball/master">
+            <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+        </div>
 
-    <div class="download">
-      <a href="http://github.com/avik-das/nesdev/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/avik-das/nesdev/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
+        <h1><a href="http://github.com/avik-das/nesdev">nesdev</a>
+          <span class="small">by <a href="http://github.com/avik-das">Avik Das</a></span></h1>
 
-    <h1><a href="http://github.com/avik-das/nesdev">nesdev</a>
-      <span class="small">by <a href="http://github.com/avik-das">avik-das</a></span></h1>
+        <h2>Authors</h2>
+        <p>Avik Das, Israel Jacques</p>
 
-    <div class="description">
-      NES Development
-    </div>
+        <h2>About</h2>
 
-    <h2>Authors</h2>
-<p>Avik Das (avikstrange@comcast.net)<br/>mrko (mrkotfw@berkeley.edu)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Avik Das (avikstrange@gmail.com)<br/>      </p>
+        <p>A collection of programs written for the Nintendo Entertainment System (NES). Due to the limitations of the hardware, all the programs must be relatively small, so it makes sense to keep them all in the same repository.</p>
 
+        <h2>Technical Details</h2>
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/avik-das/nesdev/zipball/master">zip</a> or
-      <a href="http://github.com/avik-das/nesdev/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/avik-das/nesdev</pre>
-    </p>
+        <p>Technical details regarding this project are always available in the README accompanying the <a href="https://github.com/avik-das/nesdev">Github repository</a>. The current page only provides a cursory overview suitable for those wishing to learn about the project.</p>
 
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/avik-das/nesdev">avik-das/nesdev</a>
-    </div>
+        <p>Pre-assembled ROMs are available for all relevant sub-projects. These ROMs are playable using any NES emulator, such as <a href="http://fceux.com/web/home.html">FCEUX</a>.</p>
 
+        <h2>Sub-projects</h2>
+
+        <p>The NES Development project consists of the following programs, detailed in their own pages:</p>
+
+        <ul>
+          <li><a href="sprite/">sprite</a>, a simple test program that demonstrates a wide variety of hardware-provided functionality and general programming techniques.</li>
+
+          <li>money-run, a side-scrolling platformer with an emphasis on simplicity. Indefinitely on hiatus.</li>
+        </ul>
+
+        <h2>Download</h2>
+        <p>You can download this project in either <a href="http://github.com/avik-das/nesdev/zipball/master">zip</a> or <a href="http://github.com/avik-das/nesdev/tarball/master">tar</a> formats.</p>
+
+        <p>You can also clone the project with <a href="http://git-scm.com">Git</a> by running:</p>
+
+        <pre>$ git clone git://github.com/avik-das/nesdev</pre>
+
+        <h2>Acknowledgements</h2>
+
+        <p>This project is possible thanks to the hard work of all those in the NES development community who have taken the time to record their knowledge. Special thanks goes to <a href="http://nesdev.parodius.com/">nesdev.parodius.com</a> for gathering these write-ups and making them available to newcomers to the community.</p>
+      </div>
+      <div id="bottom"></div>
   </div>
-
   
 </body>
 </html>
