@@ -1,0 +1,10 @@
+== NES DEVELOPMENT - Avik Das ==========================================
+
+The Github pages corresponding to the NES development project by Avik
+Das: https://github.com/avik-das/nesdev
+
+There is a landing page for the entire project, as well as landing pages
+for each of the sub-projects within this project. In each case, the page
+is laid out like an NES cartridge, using the resources under the common/
+directory. The pages are then customized further, altering properties
+such as the background color and the header.
