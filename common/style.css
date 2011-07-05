@@ -75,6 +75,10 @@ body {
 }
 #container ul li:before { content: "* "; }
 
+a img {
+  border: none;
+}
+
 #bottom {
   background: url(layout-cartridge-bottom.png);
   width: 971px;
