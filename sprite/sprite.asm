@@ -723,3 +723,5 @@ bg:
   .byte $55,$A6,$04,$04,$24,$58,$80,$00
   
   .advance $2000 ; The rest of Pattern Table #1 is blank
+
+; vim: ft=asmM6502:tw=72:sw=2

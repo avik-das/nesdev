@@ -561,3 +561,4 @@ bg:
 
   .advance $2000 ; The rest of Pattern Table #1 is blank
 
+; vim: ft=asmM6502:tw=72:sw=2

@@ -18,6 +18,11 @@ To run the programs after assembly, an NES emulator is required. The
 programs are tested on FCEUX, which is available at
 http://fceux.com/web/home.html .
 
+The programs are written in vim, and a modeline is present in the source
+files that gives them the appropriate syntax highlighting. The syntax
+file is available on the vim scripts website as asmM6502.vim
+(https://github.com/vim-scripts/asmM6502.vim).
+
 ~~ INCLUDED PROGRAMS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 More detailed descriptions are available in the README files inside the
