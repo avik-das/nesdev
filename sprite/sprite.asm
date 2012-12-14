@@ -100,8 +100,13 @@ init_graphics:
   rts
 
 init_sprites:
-  ; clear page 2, used to hold sprite data
-  lda #$00
+  ; Clear page 2, used to hold sprite data. If we zeroed out this page,
+  ; all the unused sprites would end up in the upper left corner of the
+  ; screen. To prevent that, we make sure the Y coordinate of all the
+  ; unused sprites are set to $FF, which puts them off screen. For
+  ; simplicity, all the data on this page is set to $FF, then
+  ; overwritten for the sprites we want to use.
+  lda #$FF
   ldx #$00
 * sta sprite,x
   inx
