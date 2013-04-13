@@ -5,7 +5,7 @@ TARGET := $(shell basename $(CURDIR)).nes
 SOURCE := $(wildcard *.asm)
 
 $(TARGET): $(SOURCE)
-	$(OPHIS) $(SOURCE) $(TARGET)
+	$(OPHIS) $(SOURCE) -o $(TARGET)
 
 .PHONY: clean
 clean:
