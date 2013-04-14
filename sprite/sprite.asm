@@ -27,8 +27,8 @@
   .text zp ; zero page
   .org $0000
 
-  .space a    1 ; whether the A button was pressed before
-  .space b    1 ; whether the B button was pressed before
+  .space ab   1 ; whether the A button was pressed before
+  .space bb   1 ; whether the B button was pressed before
   .space sel  1 ; whether the B button was pressed before
 
   .space snd  1 ; whether a low or a high note should be played
@@ -219,8 +219,8 @@ init_sound:
 
 init_variables:
   lda #0
-  sta a
-  sta b
+  sta ab
+  sta bb
   sta sel
   sta snd
   sta ani
@@ -238,11 +238,11 @@ react_to_input:
   and #1
   beq _not_a
 
-  lda a
+  lda ab
   and #1
   bne +  ; don't switch colors if A was pressed before
   lda #1
-  sta a  ; A is now pressed
+  sta ab ; A is now pressed
 
   lda player+2   ; sprite attributes
   and #%11       ; isolate palette portion
@@ -285,17 +285,17 @@ react_to_input:
 
 _not_a:
   lda #0
-  sta a  ; A is no longer pressed
+  sta ab ; A is no longer pressed
 
 * lda $4016 ; don't ignore B
   and #1
   beq _not_b
 
-  lda b
+  lda bb
   and #1
   bne +  ; don't flip if B was pressed before
   lda #1
-  sta b  ; B is now pressed
+  sta bb ; B is now pressed
 
   lda player+2   ; sprite attributes
   clc
@@ -333,7 +333,7 @@ _not_a:
 
 _not_b:
   lda #0
-  sta b  ; B is no longer pressed
+  sta bb ; B is no longer pressed
 
 * lda $4016 ; don't ignore SELECT
   and #1
