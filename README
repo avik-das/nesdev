@@ -11,8 +11,8 @@ descriptions are provided inside the corresponding directories.
 ~~ PREREQUISITES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The programs are written in 6502 assembly, using the Ophis Assembler,
-which may be found at https://hkn.eecs.berkeley.edu/~mcmartin/ophis/ .
-The Makefiles assume that the assembler is on the PATH.
+which may be found at https://github.com/michaelcmartin/Ophis .  The
+Makefiles assume that the assembler is on the PATH.
 
 To run the programs after assembly, an NES emulator is required. The
 programs are tested on FCEUX, which is available at

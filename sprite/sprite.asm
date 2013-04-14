@@ -1,7 +1,7 @@
 ; bg-ophis.asm - Avik Das
 ;
 ; A very simple demo, based on the NES101 tutorial by Michael Martin.
-; This demo can be assembled using Ophis 1.0, and runs on FCEUX.
+; This demo can be assembled using Ophis, and runs on FCEUX.
 ; 
 ; This demo serves two purposes. Firstly, my goal is to learn NES
 ; development, which I can only achieve by creating a program.
